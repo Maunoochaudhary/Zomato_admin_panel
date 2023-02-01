@@ -6,6 +6,7 @@ import AddFoodData from "./components/AddFoodData";
   return (
     <div>
     <AddFoodData/>
+    <h1>hbbh</h1>
     </div>
   );
 }
