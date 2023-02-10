@@ -1,47 +1,43 @@
 import React, { useState } from 'react'
 import './AddFoodData.css'
-// firebase imports
 import { db, storage } from '../components/Firebase/FirebaseConfig'
 import { addDoc, collection } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-// import Navbar from './Navbar';
+import Navbar from './Navbar';
 
 const AddFoodData = () => {
-    const [foodName, setFoodName] = useState('')
-    const [foodPrice, setFoodPrice] = useState('')
-    const [foodImage, setFoodImage] = useState(null)
-    const [foodCategory, setFoodCategory] = useState('')
-    const [foodDescription, setFoodDescription] = useState('')
-    const [restaurantName, setRestaurantName] = useState('')
-    // const [restaurantAddress, setRestaurantAddress] = useState('')
-    const [restaurantPhone, setRestaurantPhone] = useState('')
-    const [foodImageUrl, setFoodImageUrl] = useState('')
 
-
-    //
-    const [foodType, setFoodType] = useState('')
-    const [mealType, setMealType] = useState('')
-    const [foodAddon, setFoodAddon] = useState('')
-    const [foodAddonPrice, setFoodAddonPrice] = useState('')
-    const [restaurantEmail, setRestaurantEmail] = useState('')
-    const [restrauntAddressBuilding, setRestrauntAddressBuilding] = useState('')
-    const [restrauntAddressStreet, setRestrauntAddressStreet] = useState('')
-    const [restrauntAddressCity, setRestrauntAddressCity] = useState('')
-    const [reatrauntAddressPincode, setRestrauntAddressPincode] = useState('')
-
-    // console.log(foodName, foodPrice, foodImage, foodCategory, foodDescription, restaurantName, restaurantAddress, restaurantPhone)
-
+    const[data,setData] = useState({
+        foodName:'',
+        foodPrice:'',
+        foodCategory:'',
+        foodDescription:'',
+        restaurantName:'',
+        restaurantPhone:'',
+        foodType:'',
+        mealType:'',
+        foodAddon:'',
+        foodAddonPrice:'',
+        restaurantEmail:'',
+        restrauntAddressBuilding:'',
+        restrauntAddressStreet:'',
+        restrauntAddressCity:'',
+        reatrauntAddressPincode:'',
+        foodImage:''
+    });
+   console.log(data.foodImage.name);
+   
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        if (foodImage == null) {
+        if (data.foodImage == null) {
             alert('Please select an image')
             return
         }
 
         else {
-            const imageRef = ref(storage, `FoodImages/${foodImage.name}`)
-            uploadBytes(imageRef, foodImage)
+            const imageRef = ref(storage, `FoodImages/${data.foodImage.name}`)
+            uploadBytes(imageRef, data.foodImage)
                 .then(() => {
                     alert('Image uploaded successfully')
                     getDownloadURL(imageRef)
@@ -50,24 +46,24 @@ const AddFoodData = () => {
                             // setFoodImageUrl(url)
 
                             const foodData = {
-                                foodName,
-                                foodPrice,
+                                foodName:data.foodName,
+                                foodPrice:data.foodPrice,
                                 foodImageUrl: url,
-                                foodCategory,
-                                foodDescription,
-                                restaurantName,
-                                // restaurantAddress,
-                                restaurantPhone,
-                                //
-                                foodType,
-                                mealType,
-                                foodAddon,
-                                foodAddonPrice,
-                                restaurantEmail,
-                                restrauntAddressBuilding,
-                                restrauntAddressStreet,
-                                restrauntAddressCity,
-                                reatrauntAddressPincode,
+                                foodCategory:data.foodCategory,
+                                foodDescription:data.foodDescription,
+                                restaurantName:data.restaurantName,
+                               
+                                restaurantPhone:data.restaurantPhone,
+                                
+                                foodType:data.foodType,
+                                mealType:data.mealType,
+                                foodAddon:data.foodAddon,
+                                foodAddonPrice:data.foodAddonPrice,
+                                restaurantEmail:data.restaurantEmail,
+                                restrauntAddressBuilding:data.restrauntAddressBuilding,
+                                restrauntAddressStreet:data.restrauntAddressStreet,
+                                restrauntAddressCity:data.restrauntAddressCity,
+                                reatrauntAddressPincode:data.reatrauntAddressPincode,
                                 id: new Date().getTime().toString()
                             }
 
@@ -92,17 +88,17 @@ const AddFoodData = () => {
     // console.log(new Date().getTime().toString())
     return (
         <div className="food-outermost">
-            {/* <Navbar /> */}
+            <Navbar />
             <div className="form-outer">
                 <h1>Add Food Data</h1>
                 <form className="form-inner">
                     <label>Food Name</label>
                     <input type="text" name="food_name"
-                        onChange={(e) => { setFoodName(e.target.value) }} />
+                        onChange={(e) => { setData((prev)=>({...prev,foodName:e.target.value})) }} />
                     <br />
                     <label>Food Description</label>
                     <input type="text" name="food_description"
-                        onChange={(e) => { setFoodDescription(e.target.value) }} />
+                        onChange={(e) => {setData((prev)=>({...prev,foodDescription:e.target.value})) }} />
                     <br />
 
                     {/*                            */}
@@ -115,13 +111,13 @@ const AddFoodData = () => {
                         <div className="form-col">
                             <label>Food Price</label>
                             <input type="number" name="food_price"
-                                onChange={(e) => { setFoodPrice(e.target.value) }}
+                                onChange={(e) => {setData((prev)=>({...prev,foodPrice:e.target.value}))}}
                             />
                         </div>
                         <div className="form-col">
                             <label>Food Type</label>
 
-                            <select name="food_type" onChange={(e) => { setFoodType(e.target.value) }}>
+                            <select name="food_type" onChange={(e) => { setData((prev)=>({...prev,foodType:e.target.value})) }}>
                                 <option value="null">Select Food Type</option>
                                 <option value="veg">Veg</option>
                                 <option value="non-veg">Non-Veg</option>
@@ -131,19 +127,19 @@ const AddFoodData = () => {
                     <div className="form-row">
                         <div className="form-col">
                             <label>Food Category</label>
-                            <select name="food_category" onChange={(e) => { setFoodCategory(e.target.value) }}>
+                            <select name="food_category" onChange={(e) => { setData((prev)=>({...prev,foodCategory:e.target.value})) }}>
                                 <option value="null">Select Food Category</option>
-                                <option value="veg">Indian</option>
-                                <option value="non-veg">Chineese</option>
-                                <option value="non-veg">Italian</option>
-                                <option value="non-veg">Mexican</option>
-                                <option value="non-veg">American</option>
+                                <option value="Indian">Indian</option>
+                                <option value="Chineese">Chineese</option>
+                                <option value="Italian">Italian</option>
+                                <option value="Mexican">Mexican</option>
+                                <option value="American">American</option>
                             </select>
                         </div>
                         <div className="form-col">
                             <label>Meal Type</label>
 
-                            <select name="meal_type" onChange={(e) => { setMealType(e.target.value) }}>
+                            <select name="meal_type" onChange={(e) => { setData((prev)=>({...prev,mealType:e.target.value})) }}>
                                 <option value="null">Select Meal Type</option>
                                 <option value="dinner">Dinner</option>
                                 <option value="staters">Starters</option>
@@ -157,13 +153,13 @@ const AddFoodData = () => {
                         <div class="form-col">
                             <label>Add On</label>
                             <input type="text" name="food_addon"
-                                onChange={(e) => { setFoodAddon(e.target.value) }}
+                                onChange={(e) => { setData((prev)=>({...prev,foodAddon:e.target.value})) }}
                             />
                         </div>
                         <div className='form-col'>
                             <label>Add On Price</label>
                             <input type="text" name="food_addon_price"
-                                onChange={(e) => { setFoodAddonPrice(e.target.value) }}
+                                onChange={(e) => { setData((prev)=>({...prev,foodAddonPrice:e.target.value})) }}
                             />
                         </div>
                     </div>
@@ -173,25 +169,27 @@ const AddFoodData = () => {
                     {/*                                          */}
                     <label>Food Image</label>
                     <input type="file" name="food_image"
-                        onChange={(e) => { setFoodImage(e.target.files[0]) }}
+                        onChange={(e) => { 
+                            console.log(e.target.files[0])
+                            setData((prev)=>({...prev,foodImage:e.target.files[0]})) }}
                     />
                     <br />
                     <label>Restaurant Name</label>
                     <input type="text" name="restaurant_name"
-                        onChange={(e) => { setRestaurantName(e.target.value) }}
+                        onChange={(e) => { setData((prev)=>({...prev,restaurantName:e.target.value})) }}
                     />
                     <br />
                     <div class="form-row">
                         <div class="form-col">
                             <label>Restaurant Building Number/Name</label>
                             <input type="text" name="restaurant_address_building"
-                                onChange={(e) => { setRestrauntAddressBuilding(e.target.value) }}
+                                onChange={(e) => { setData((prev)=>({...prev,restrauntAddressBuilding:e.target.value})) }}
                             />
                         </div>
                         <div class="form-col">
                             <label>Restaurant Street / Area Name</label>
                             <input type="text" name="restaurant_address_street"
-                                onChange={(e) => { setRestrauntAddressStreet(e.target.value) }}
+                                onChange={(e) => { setData((prev)=>({...prev,restrauntAddressStreet:e.target.value})) }}
                             />
                         </div>
                     </div>
@@ -200,13 +198,13 @@ const AddFoodData = () => {
                         <div class="form-col">
                             <label>Restaurant City</label>
                             <input type="text" name="restaurant_address_city"
-                                onChange={(e) => { setRestrauntAddressCity(e.target.value) }}
+                                onChange={(e) => { setData((prev)=>({...prev,restrauntAddressCity:e.target.value})) }}
                             />
                         </div>
                         <div class="form-col">
                             <label>Restaurant Pin-code</label>
                             <input type="number" name="restaurant_address_pincode"
-                                onChange={(e) => { setRestrauntAddressPincode(e.target.value) }}
+                                onChange={(e) => { setData((prev)=>({...prev,reatrauntAddressPincode:e.target.value})) }}
                             />
                         </div>
                     </div>
@@ -215,13 +213,13 @@ const AddFoodData = () => {
                         <div class="form-col">
                             <label>Restaurant Phone</label>
                             <input type="number" name="restaurant_phone"
-                                onChange={(e) => { setRestaurantPhone(e.target.value) }}
+                                onChange={(e) => { setData((prev)=>({...prev,restaurantPhone:e.target.value})) }}
                             />
                         </div>
                         <div class="form-col">
                             <label>Restaurant Email</label>
                             <input type="email" name="restaurant_email"
-                                onChange={(e) => { setRestaurantEmail(e.target.value) }}
+                                onChange={(e) => { setData((prev)=>({...prev,restaurantEmail:e.target.value})) }}
                             />
                         </div>
                     </div>
